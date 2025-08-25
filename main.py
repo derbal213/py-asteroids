@@ -30,8 +30,8 @@ def main():
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroidField = AsteroidField()
-
-    while (True):
+    running = True
+    while (running):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -41,6 +41,10 @@ def main():
         #player.draw(screen)
 
         #Update
+        if pygame.key.get_pressed()[pygame.K_q]:
+            running = False
+            print(f"Final Score: {score}")
+            sys.exit(0)
         updatable.update(dt)
 
         for a in asteroids:
