@@ -1,4 +1,5 @@
 import pygame
+import sys
 from constants import *
 from player import Player
 from asteroid import Asteroid
@@ -35,6 +36,12 @@ def main():
 
         #Update
         updatable.update(dt)
+
+        for a in drawable:
+            if not isinstance(a, Player):
+                if a.checkCollision(player):
+                    print("Game Over!")
+                    sys.exit(1)
 
         #Draw
         for draw in drawable:
