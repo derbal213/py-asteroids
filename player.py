@@ -10,6 +10,7 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.__shotTimer = 0
+        self.lives = 3
     
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -54,4 +55,6 @@ class Player(CircleShape):
             shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
             self.__shotTimer = PLAYER_SHOOT_COOLDOWN
 
-        
+    def respawn(self, x, y):
+        self.position = pygame.Vector2(x, y)
+        self.hasCollision = True

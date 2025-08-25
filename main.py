@@ -16,7 +16,6 @@ def main():
     dt = 0
 
     score = 0
-    lives = 3
 
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -28,40 +27,43 @@ def main():
     AsteroidField.containers = (updatable)
     Shot.containers = (updatable, drawable, shots)
 
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    player_start_pos_x = SCREEN_WIDTH / 2
+    player_start_pos_y = SCREEN_HEIGHT /2
+    player = Player(player_start_pos_x, player_start_pos_y)
     asteroidField = AsteroidField()
     running = True
     while (running):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                print(f"Final Score: {score}")
                 return
         screen.fill((0, 0, 0))
 
-        #player.update(dt)
-        #player.draw(screen)
-
         #Update
-        if pygame.key.get_pressed()[pygame.K_q]:
-            running = False
-            print(f"Final Score: {score}")
-            sys.exit(0)
         updatable.update(dt)
 
         for a in asteroids:
             for s in shots:
                 if a.checkCollision(s):
-                    score += 1
-                    a.split()
+                    score += a.split()
                     s.kill()
 
+        playerDied = False
         for a in asteroids:
-            if not isinstance(a, Player):
-                if a.checkCollision(player):
-                    if lives == 0:
-                        print("Game Over!")
-                        print(f"Final Score: {score}")
-                        sys.exit(1)
-                    lives -= 1
+            if a.checkCollision(player):
+                playerDied = True
+                player.lives -= 1
+                if player.lives == 0:
+                    print("Game Over!")
+                    print(f"Final Score: {score}")
+                    sys.exit(1)
+                print(f"Lives Remaining: {player.lives}")
+                player.hasCollision = False
+        
+        if playerDied:
+            for a in asteroids:
+                a.kill()
+            player.respawn(player_start_pos_x, player_start_pos_y)
 
         #Draw
         for draw in drawable:
